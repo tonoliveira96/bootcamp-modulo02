@@ -94,22 +94,22 @@ class AppointmentController {
     }
 
     // check same provider
-    const sameProvider = await User.findOne({
-      where: {
-        id: req.userID,
-        provider: true,
-      },
-    });
+    // const sameProvider = await User.findOne({
+    //   where: {
+    //     id: req.userID,
+    //     provider: true,
+    //   },
+    // });
     // if (sameProvider) {
     //   return res.status(400).json({ error: 'You cant appointment yourself' });
     // }
 
-    // // save appointment
-    // const appointment = await Appointment.create({
-    //   user_id: req.userID,
-    //   provider_id,
-    //   date: hourStart,
-    // });
+    // save appointment
+    const appointment = await Appointment.create({
+      user_id: req.userID,
+      provider_id,
+      date: hourStart,
+    });
 
     // notify appointment provider
     const user = await User.findByPk(req.userID);
