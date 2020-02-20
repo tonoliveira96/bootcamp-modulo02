@@ -80,11 +80,36 @@ class AppointmentController {
         .json({ error: 'Appointment date is not available' });
     }
 
-    const appointment = await Appointment.create({
-      user_id: req.userID,
-      provider_id,
-      date: hourStart,
+    // check appointment saved between providers
+    const providerToProvider = await User.findOne({
+      where: {
+        id: provider_id,
+        provider: true,
+      },
     });
+    if (providerToProvider) {
+      return res
+        .status(400)
+        .json({ error: 'Appointmente between provider not allowed' });
+    }
+
+    // check same provider
+    const sameProvider = await User.findOne({
+      where: {
+        id: req.userID,
+        provider: true,
+      },
+    });
+    // if (sameProvider) {
+    //   return res.status(400).json({ error: 'You cant appointment yourself' });
+    // }
+
+    // // save appointment
+    // const appointment = await Appointment.create({
+    //   user_id: req.userID,
+    //   provider_id,
+    //   date: hourStart,
+    // });
 
     // notify appointment provider
     const user = await User.findByPk(req.userID);
